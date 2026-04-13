@@ -1,6 +1,6 @@
 # 智慧图书馆借阅管理系统
 
-> Web开发与应用A 课程项目
+> Web开发技术A 课程项目
 
 ## 项目简介
 
@@ -110,8 +110,6 @@ CREATE DATABASE library_db CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
   }
 }
 ```
-
-> 注意：`appsettings.Development.json` 已被 `.gitignore` 忽略，不会提交到仓库。
 
 ### 3. 运行项目
 
