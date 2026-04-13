@@ -1,0 +1,67 @@
+@model List<WebProject1.Models.BorrowRecord>
+@{
+    ViewData["Title"] = "借阅管理";
+}
+
+<h3 class="mb-3">借阅管理</h3>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+
+<div class="table-responsive">
+    <table class="table table-hover">
+        <thead class="table-light">
+            <tr>
+                <th>ID</th>
+                <th>用户</th>
+                <th>书名</th>
+                <th>副本#</th>
+                <th>借出时间</th>
+                <th>应还时间</th>
+                <th>归还时间</th>
+                <th>状态</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var r in Model)
+            {
+                var isOverdue = r.Status == "Borrowing" && r.DueDate < DateTime.Now;
+                <tr class="@(isOverdue ? "table-danger" : "")">
+                    <td>@r.Id</td>
+                    <td>@r.User?.Username</td>
+                    <td>@r.BookCopy?.Book?.Title</td>
+                    <td>#@r.BookCopyId</td>
+                    <td>@r.BorrowDate.ToString("yyyy-MM-dd")</td>
+                    <td>@r.DueDate.ToString("yyyy-MM-dd")</td>
+                    <td>@(r.ReturnDate?.ToString("yyyy-MM-dd") ?? "-")</td>
+                    <td>
+                        @if (isOverdue)
+                        {
+                            <span class="badge bg-danger">已逾期</span>
+                        }
+                        else if (r.Status == "Borrowing")
+                        {
+                            <span class="badge bg-primary">借阅中</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-success">已归还</span>
+                        }
+                    </td>
+                    <td>
+                        @if (r.Status == "Borrowing")
+                        {
+                            <form asp-action="ForceReturn" method="post" class="d-inline">
+                                <input type="hidden" name="id" value="@r.Id" />
+                                <button type="submit" class="btn btn-sm btn-outline-warning">强制归还</button>
+                            </form>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,59 @@
+@model List<WebProject1.Models.Book>
+@{
+    ViewData["Title"] = "图书管理";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>图书管理</h3>
+    <a asp-action="CreateBook" class="btn btn-primary">添加图书</a>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<div class="table-responsive">
+    <table class="table table-hover">
+        <thead class="table-light">
+            <tr>
+                <th>ID</th>
+                <th>书名</th>
+                <th>作者</th>
+                <th>ISBN</th>
+                <th>分类</th>
+                <th>副本数</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var book in Model)
+            {
+                <tr>
+                    <td>@book.Id</td>
+                    <td>@book.Title</td>
+                    <td>@book.Author</td>
+                    <td>@(book.ISBN ?? "-")</td>
+                    <td><span class="badge bg-info">@book.Category?.Name</span></td>
+                    <td>
+                        <span class="badge bg-secondary">@book.BookCopies.Count 册</span>
+                        <span class="badge bg-success">可借 @book.BookCopies.Count(c => c.Status == "Available")</span>
+                    </td>
+                    <td>
+                        <a asp-action="EditBook" asp-route-id="@book.Id" class="btn btn-sm btn-outline-primary">编辑</a>
+                        <a asp-action="BookCopies" asp-route-bookId="@book.Id" class="btn btn-sm btn-outline-info">副本</a>
+                        <form asp-action="DeleteBook" method="post" class="d-inline"
+                              onsubmit="return confirm('确定要删除这本书吗？')">
+                            <input type="hidden" name="id" value="@book.Id" />
+                            <button type="submit" class="btn btn-sm btn-outline-danger">删除</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

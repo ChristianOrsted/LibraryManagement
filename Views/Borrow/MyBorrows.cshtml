@@ -1,0 +1,80 @@
+@model List<WebProject1.Models.BorrowRecord>
+@{
+    ViewData["Title"] = "我的借阅";
+}
+
+<h3 class="mb-3">我的借阅记录</h3>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+@if (!Model.Any())
+{
+    <div class="text-center py-5 text-muted">
+        <i class="bi bi-inbox" style="font-size: 3rem;"></i>
+        <p class="mt-2">暂无借阅记录</p>
+        <a asp-controller="Book" asp-action="Index" class="btn btn-primary">去借书</a>
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead class="table-light">
+                <tr>
+                    <th>书名</th>
+                    <th>作者</th>
+                    <th>副本编号</th>
+                    <th>借出时间</th>
+                    <th>应还时间</th>
+                    <th>归还时间</th>
+                    <th>状态</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var record in Model)
+                {
+                    var isOverdue = record.Status == "Borrowing" && record.DueDate < DateTime.Now;
+                    <tr class="@(isOverdue ? "table-danger" : "")">
+                        <td>@record.BookCopy?.Book?.Title</td>
+                        <td>@record.BookCopy?.Book?.Author</td>
+                        <td>#@record.BookCopyId</td>
+                        <td>@record.BorrowDate.ToString("yyyy-MM-dd")</td>
+                        <td>@record.DueDate.ToString("yyyy-MM-dd")</td>
+                        <td>@(record.ReturnDate?.ToString("yyyy-MM-dd") ?? "-")</td>
+                        <td>
+                            @if (isOverdue)
+                            {
+                                <span class="badge bg-danger">已逾期</span>
+                            }
+                            else if (record.Status == "Borrowing")
+                            {
+                                <span class="badge bg-primary">借阅中</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-success">已归还</span>
+                            }
+                        </td>
+                        <td>
+                            @if (record.Status == "Borrowing")
+                            {
+                                <form asp-action="Return" method="post" class="d-inline">
+                                    <input type="hidden" name="id" value="@record.Id" />
+                                    <button type="submit" class="btn btn-sm btn-outline-success">归还</button>
+                                </form>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

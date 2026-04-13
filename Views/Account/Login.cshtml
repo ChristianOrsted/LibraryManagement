@@ -1,0 +1,43 @@
+@model WebProject1.Models.LoginViewModel
+@{
+    ViewData["Title"] = "登录";
+}
+
+<div class="row justify-content-center mt-5">
+    <div class="col-md-4">
+        <h3 class="text-center fw-bold mb-1">欢迎回来</h3>
+        <p class="text-center text-muted mb-4">登录你的账号以继续</p>
+
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success">@TempData["Success"]</div>
+        }
+
+        <form asp-action="Login" method="post">
+            <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+            <div class="mb-3">
+                <label asp-for="Username" class="form-label"></label>
+                <input asp-for="Username" class="form-control" placeholder="请输入用户名" />
+                <span asp-validation-for="Username" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Password" class="form-label"></label>
+                <input asp-for="Password" class="form-control" placeholder="请输入密码" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 mb-3 py-2">登录</button>
+
+            <div class="text-center">
+                <span class="text-muted">还没有账号？</span>
+                <a asp-action="Register" style="color: var(--apple-blue); text-decoration: none;">立即注册</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

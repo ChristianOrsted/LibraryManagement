@@ -1,0 +1,64 @@
+## .NET / ASP.NET Core
+
+# Build output
+bin/
+obj/
+
+# NuGet packages
+*.nupkg
+*.snupkg
+.nuget/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio
+.vs/
+*.rsuser
+
+# Rider / JetBrains
+.idea/
+
+# VS Code
+.vscode/
+
+## Sensitive configuration - DO NOT commit credentials
+appsettings.Production.json
+appsettings.Development.json
+# If your appsettings.json contains real credentials, use secrets instead:
+# dotnet user-secrets init
+# See: https://learn.microsoft.com/aspnet/core/security/app-secrets
+
+## Database files
+*.db
+*.sqlite
+*.sqlite3
+
+## Logs
+logs/
+*.log
+
+## OS generated files
+.DS_Store
+Thumbs.db
+
+## Claude Code internal directory
+.claude/
+
+## Local development notes / scratch files
+prompt.txt
+project_inro.txt
+require.txt
+
+## SQL files (may contain sensitive schema/data)
+init.sql
+sql.md
+
+## Personal documents
+*.doc
+*.docx
+generate_report.py
+introduction/

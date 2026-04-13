@@ -1,0 +1,51 @@
+@model List<WebProject1.Models.Category>
+@{
+    ViewData["Title"] = "分类管理";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>分类管理</h3>
+    <a asp-action="CreateCategory" class="btn btn-primary">添加分类</a>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<div class="table-responsive">
+    <table class="table table-hover">
+        <thead class="table-light">
+            <tr>
+                <th>ID</th>
+                <th>分类名称</th>
+                <th>描述</th>
+                <th>图书数量</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var cat in Model)
+            {
+                <tr>
+                    <td>@cat.Id</td>
+                    <td>@cat.Name</td>
+                    <td>@(cat.Description ?? "-")</td>
+                    <td><span class="badge bg-info">@cat.Books.Count 本</span></td>
+                    <td>
+                        <a asp-action="EditCategory" asp-route-id="@cat.Id" class="btn btn-sm btn-outline-primary">编辑</a>
+                        <form asp-action="DeleteCategory" method="post" class="d-inline"
+                              onsubmit="return confirm('确定要删除该分类吗？')">
+                            <input type="hidden" name="id" value="@cat.Id" />
+                            <button type="submit" class="btn btn-sm btn-outline-danger">删除</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

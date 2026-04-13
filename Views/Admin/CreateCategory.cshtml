@@ -1,0 +1,32 @@
+@model WebProject1.Models.Category
+@{
+    ViewData["Title"] = "添加分类";
+}
+
+<h3 class="mb-3">添加分类</h3>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <form asp-action="CreateCategory" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <div class="mb-3">
+                <label asp-for="Name" class="form-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Description" class="form-label"></label>
+                <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary">保存</button>
+            <a asp-action="Categories" class="btn btn-secondary">取消</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

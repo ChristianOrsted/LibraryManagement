@@ -1,0 +1,91 @@
+@model List<WebProject1.Models.Book>
+@{
+    ViewData["Title"] = "首页";
+}
+
+<!-- Hero Section -->
+<div class="hero-section text-center mb-5 rounded-4">
+    <h1 class="display-5 fw-bold">智慧图书馆</h1>
+    <p class="lead mb-4">探索知识的海洋，享受阅读的乐趣</p>
+    <a asp-controller="Book" asp-action="Index" class="btn btn-light btn-lg px-4">
+        浏览图书
+    </a>
+</div>
+
+<!-- Stats -->
+<div class="row g-4 mb-5">
+    <div class="col-md-3">
+        <div class="card text-center border-0 stat-card">
+            <div class="card-body">
+                <div class="stat-icon"><i class="bi bi-book"></i></div>
+                <h3>@ViewBag.TotalBooks</h3>
+                <p class="mb-0">图书种类</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center border-0 stat-card">
+            <div class="card-body">
+                <div class="stat-icon"><i class="bi bi-journals"></i></div>
+                <h3>@ViewBag.TotalCopies</h3>
+                <p class="mb-0">馆藏总量</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center border-0 stat-card">
+            <div class="card-body">
+                <div class="stat-icon"><i class="bi bi-people"></i></div>
+                <h3>@ViewBag.TotalUsers</h3>
+                <p class="mb-0">注册用户</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center border-0 stat-card">
+            <div class="card-body">
+                <div class="stat-icon"><i class="bi bi-arrow-left-right"></i></div>
+                <h3>@ViewBag.ActiveBorrows</h3>
+                <p class="mb-0">在借图书</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Latest Books -->
+<h4 class="mb-4">最新上架</h4>
+<div class="row g-4">
+    @foreach (var book in Model)
+    {
+        var available = book.BookCopies.Count(c => c.Status == "Available");
+        <div class="col-md-4 col-lg-2">
+            <div class="card h-100 book-card border-0">
+                @if (!string.IsNullOrEmpty(book.CoverImage))
+                {
+                    <img src="@book.CoverImage" alt="@book.Title"
+                         class="card-img-top" style="height: 180px; object-fit: cover;" />
+                }
+                else
+                {
+                    <div class="card-img-top d-flex align-items-center justify-content-center"
+                         style="height: 180px; background: #e8e8ed;">
+                        <span class="fw-bold fs-3" style="color: #86868b;">@book.Title.First()</span>
+                    </div>
+                }
+                <div class="card-body p-3">
+                    <h6 class="card-title text-truncate mb-1">@book.Title</h6>
+                    <small class="text-muted">@book.Author</small>
+                    <div class="mt-2">
+                        <span class="badge @(available > 0 ? "bg-success" : "bg-danger")">
+                            @(available > 0 ? $"可借 {available} 册" : "已借完")
+                        </span>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent border-0 p-3 pt-0">
+                    <a asp-controller="Book" asp-action="Details" asp-route-id="@book.Id"
+                       class="btn btn-outline-primary btn-sm w-100">详情</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
