@@ -1,3 +1,9 @@
+@*
+    Admin/CreateBook.cshtml —— 添加图书表单页面
+    对应 AdminController.CreateBook()
+    表单字段直接绑定到 Book 实体模型
+    asp-items="@ViewBag.Categories" 将分类列表渲染为下拉选项
+*@
 @model WebProject1.Models.Book
 @{
     ViewData["Title"] = "添加图书";
@@ -34,6 +40,7 @@
                     <input asp-for="PublishYear" class="form-control" type="number" />
                 </div>
                 <div class="col-md-6">
+                    @* asp-items 自动将 SelectList 渲染为 <option> 标签 *@
                     <label asp-for="CategoryId" class="form-label"></label>
                     <select asp-for="CategoryId" asp-items="@ViewBag.Categories" class="form-select">
                         <option value="">-- 请选择 --</option>

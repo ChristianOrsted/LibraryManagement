@@ -1,9 +1,15 @@
+@*
+    Book/Details.cshtml —— 图书详情页
+    对应 BookController.Details()
+    展示单本书的详细信息，并根据用户登录状态和库存情况，显示"借阅"或"预约"按钮
+*@
 @model WebProject1.Models.Book
 @{
     ViewData["Title"] = Model.Title;
 }
 
 <div class="row mt-3 g-5">
+    @* ========== 左侧：封面图片 ========== *@
     <div class="col-md-4">
         <div class="rounded-4 overflow-hidden">
             @if (!string.IsNullOrEmpty(Model.CoverImage))
@@ -20,9 +26,12 @@
             }
         </div>
     </div>
+
+    @* ========== 右侧：图书信息 + 操作按钮 ========== *@
     <div class="col-md-8">
         <h2 class="fw-bold mb-4" style="letter-spacing: -0.02em;">@Model.Title</h2>
 
+        @* 操作结果提示（借阅成功/失败等） *@
         @if (TempData["Success"] != null)
         {
             <div class="alert alert-success">@TempData["Success"]</div>
@@ -32,6 +41,7 @@
             <div class="alert alert-danger">@TempData["Error"]</div>
         }
 
+        @* 图书详细信息表格 *@
         <table class="table table-borderless">
             <tr><th style="width:100px;" class="text-muted fw-medium">作者</th><td>@Model.Author</td></tr>
             <tr><th class="text-muted fw-medium">ISBN</th><td>@(Model.ISBN ?? "N/A")</td></tr>
@@ -55,11 +65,14 @@
             <p class="text-muted" style="line-height: 1.7;">@Model.Description</p>
         }
 
+        @* ========== 操作按钮区域：根据登录状态和库存分三种情况 ========== *@
         @if (Context.Session.GetInt32("UserId") != null)
         {
+            @* 情况1：已登录 *@
             <div class="mt-4">
                 @if ((int)ViewBag.AvailableCopies > 0)
                 {
+                    @* 有可借副本 → 显示"立即借阅"按钮，POST 到 BorrowController.Borrow *@
                     <form asp-controller="Borrow" asp-action="Borrow" method="post" class="d-inline">
                         <input type="hidden" name="bookId" value="@Model.Id" />
                         <button type="submit" class="btn btn-primary">立即借阅</button>
@@ -67,6 +80,7 @@
                 }
                 else
                 {
+                    @* 无可借副本 → 显示预约按钮或"已预约"提示 *@
                     @if (ViewBag.HasActiveReservation != null && (bool)ViewBag.HasActiveReservation)
                     {
                         <button class="btn btn-secondary" disabled>已预约</button>
@@ -83,6 +97,7 @@
         }
         else
         {
+            @* 情况2：未登录 → 提示用户先登录 *@
             <div class="alert alert-info mt-4">
                 <a asp-controller="Account" asp-action="Login">登录</a> 后即可借阅或预约图书
             </div>

@@ -1,9 +1,15 @@
+@*
+    Home/Index.cshtml —— 网站首页
+    对应 HomeController.Index()
+    @model 声明此视图接收的数据类型：一个 Book 列表（最新上架的 6 本书）
+    ViewBag 中还携带了统计数据（图书总数、用户数等）
+*@
 @model List<WebProject1.Models.Book>
 @{
     ViewData["Title"] = "首页";
 }
 
-<!-- Hero Section -->
+@* ========== 顶部横幅区域 ========== *@
 <div class="hero-section text-center mb-5 rounded-4">
     <h1 class="display-5 fw-bold">智慧图书馆</h1>
     <p class="lead mb-4">探索知识的海洋，享受阅读的乐趣</p>
@@ -12,7 +18,8 @@
     </a>
 </div>
 
-<!-- Stats -->
+@* ========== 统计数据卡片区域 ========== *@
+@* 这些数据来自 Controller 中通过 ViewBag 传递的统计值 *@
 <div class="row g-4 mb-5">
     <div class="col-md-3">
         <div class="card text-center border-0 stat-card">
@@ -52,14 +59,17 @@
     </div>
 </div>
 
-<!-- Latest Books -->
+@* ========== 最新上架图书列表 ========== *@
+@* 遍历 Model（Book 列表），为每本书渲染一张卡片 *@
 <h4 class="mb-4">最新上架</h4>
 <div class="row g-4">
     @foreach (var book in Model)
     {
+        @* 统计该书可借的副本数量 *@
         var available = book.BookCopies.Count(c => c.Status == "Available");
         <div class="col-md-4 col-lg-2">
             <div class="card h-100 book-card border-0">
+                @* 如果有封面图片则显示图片，否则显示书名首字作为占位 *@
                 @if (!string.IsNullOrEmpty(book.CoverImage))
                 {
                     <img src="@book.CoverImage" alt="@book.Title"
@@ -76,12 +86,14 @@
                     <h6 class="card-title text-truncate mb-1">@book.Title</h6>
                     <small class="text-muted">@book.Author</small>
                     <div class="mt-2">
+                        @* 根据是否有可借副本显示绿色"可借"或红色"已借完" *@
                         <span class="badge @(available > 0 ? "bg-success" : "bg-danger")">
                             @(available > 0 ? $"可借 {available} 册" : "已借完")
                         </span>
                     </div>
                 </div>
                 <div class="card-footer bg-transparent border-0 p-3 pt-0">
+                    @* asp-route-id 会将 book.Id 作为路由参数，生成 /Book/Details/5 这样的 URL *@
                     <a asp-controller="Book" asp-action="Details" asp-route-id="@book.Id"
                        class="btn btn-outline-primary btn-sm w-100">详情</a>
                 </div>

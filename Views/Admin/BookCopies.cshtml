@@ -1,5 +1,11 @@
+@*
+    Admin/BookCopies.cshtml —— 某本书的副本管理页面
+    对应 AdminController.BookCopies()
+    可以添加新副本、标记副本损坏或恢复可借
+*@
 @model List<WebProject1.Models.BookCopy>
 @{
+    @* 从 ViewBag 取出当前管理的图书对象（Controller 中通过 ViewBag.Book 传入） *@
     var book = (WebProject1.Models.Book)ViewBag.Book;
     ViewData["Title"] = $"副本管理 - {book.Title}";
 }
@@ -11,7 +17,7 @@
     <div class="alert alert-success">@TempData["Success"]</div>
 }
 
-<!-- Add Copy -->
+@* ========== 添加新副本的表单 ========== *@
 <div class="card shadow-sm mb-3">
     <div class="card-body">
         <form asp-action="AddCopy" method="post" class="row g-2 align-items-end">

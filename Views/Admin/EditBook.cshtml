@@ -1,3 +1,10 @@
+@*
+    Admin/EditBook.cshtml —— 编辑图书表单页面
+    对应 AdminController.EditBook()
+    与 CreateBook 表单结构几乎相同，区别是：
+    1. 有 hidden 字段保存 Id 和 CoverImage（编辑时不能丢失这些值）
+    2. 表单提交到 EditBook(POST) 而不是 CreateBook(POST)
+*@
 @model WebProject1.Models.Book
 @{
     ViewData["Title"] = "编辑图书";
@@ -9,6 +16,7 @@
     <div class="card-body">
         <form asp-action="EditBook" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+            @* hidden 字段：这些值不需要用户编辑，但提交时必须带上 *@
             <input type="hidden" asp-for="Id" />
             <input type="hidden" asp-for="CoverImage" />
 

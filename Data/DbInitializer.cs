@@ -2,15 +2,22 @@ using WebProject1.Models;
 
 namespace WebProject1.Data;
 
+/// <summary>
+/// 数据库种子数据初始化器
+/// 应用首次启动时，自动创建数据库表并填充初始数据（管理员账号、示例图书等）
+/// 这样开发和演示时不需要手动插入数据
+/// </summary>
 public static class DbInitializer
 {
     public static void Initialize(LibraryDbContext context)
     {
+        // 如果数据库不存在，则根据 DbContext 中的实体定义自动建表
         context.Database.EnsureCreated();
 
-        if (context.Users.Any()) return; // Already seeded
+        // 如果已经有用户数据，说明种子数据已初始化过，直接跳过
+        if (context.Users.Any()) return;
 
-        // Seed admin user (password: admin123)
+        // 创建管理员账号（密码: admin123，用 BCrypt 哈希存储）
         var admin = new User
         {
             Username = "admin",
@@ -20,7 +27,7 @@ public static class DbInitializer
             CreatedAt = DateTime.Now
         };
 
-        // Seed reader user (password: reader123)
+        // 创建普通读者账号（密码: reader123）
         var reader = new User
         {
             Username = "reader",
@@ -32,7 +39,7 @@ public static class DbInitializer
 
         context.Users.AddRange(admin, reader);
 
-        // Seed categories
+        // 初始化图书分类
         var categories = new Category[]
         {
             new() { Name = "文学", Description = "小说、散文、诗歌等文学作品" },
@@ -45,7 +52,7 @@ public static class DbInitializer
         context.Categories.AddRange(categories);
         context.SaveChanges();
 
-        // Seed books
+        // 初始化示例图书数据
         var books = new Book[]
         {
             new() { Title = "三体", Author = "刘慈欣", ISBN = "978-7-5366-9293-0", Publisher = "重庆出版社", PublishYear = 2008, Description = "地球往事三部曲之一，讲述地球人类文明和三体文明的信息交流、生死搏杀。", CategoryId = categories[0].Id },
@@ -60,12 +67,12 @@ public static class DbInitializer
         context.Books.AddRange(books);
         context.SaveChanges();
 
-        // Seed book copies
+        // 为每本书随机生成 2~4 个物理副本，并随机分配馆内位置
         var copies = new List<BookCopy>();
         string[] locations = { "A区-1排", "A区-2排", "B区-1排", "B区-2排", "C区-1排" };
         foreach (var book in books)
         {
-            int copyCount = Random.Shared.Next(2, 5);
+            int copyCount = Random.Shared.Next(2, 5); // 每本书 2~4 个副本
             for (int i = 0; i < copyCount; i++)
             {
                 copies.Add(new BookCopy

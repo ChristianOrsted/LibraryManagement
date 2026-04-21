@@ -1,3 +1,8 @@
-﻿@{
+﻿@*
+    _ViewStart.cshtml —— 视图启动文件
+    在每个视图渲染之前自动执行，这里设置所有视图默认使用 _Layout.cshtml 作为布局模板
+    如果某个视图需要不同的布局，可以在自己的 @{ Layout = "xxx"; } 中覆盖
+*@
+@{
     Layout = "_Layout";
 }

@@ -1,3 +1,8 @@
+@*
+    Account/Login.cshtml —— 登录页面
+    对应 AccountController.Login()
+    @model LoginViewModel：此视图绑定的数据模型，包含 Username 和 Password 两个字段
+*@
 @model WebProject1.Models.LoginViewModel
 @{
     ViewData["Title"] = "登录";
@@ -8,17 +13,25 @@
         <h3 class="text-center fw-bold mb-1">欢迎回来</h3>
         <p class="text-center text-muted mb-4">登录你的账号以继续</p>
 
+        @* TempData 是一次性消息，这里用于显示注册成功后的提示 *@
         @if (TempData["Success"] != null)
         {
             <div class="alert alert-success">@TempData["Success"]</div>
         }
 
+        @* asp-action="Login" 表示表单提交到 AccountController 的 Login(POST) 方法 *@
         <form asp-action="Login" method="post">
+            @* asp-validation-summary="All" 显示所有验证错误的汇总（包括字段级和模型级错误） *@
             <div asp-validation-summary="All" class="text-danger mb-3"></div>
 
             <div class="mb-3">
+                @* asp-for="Username" 会自动：
+                   1. 生成 id="Username" name="Username"
+                   2. 读取 [Display] 特性作为 label 文本
+                   3. 生成客户端验证的 data-* 属性 *@
                 <label asp-for="Username" class="form-label"></label>
                 <input asp-for="Username" class="form-control" placeholder="请输入用户名" />
+                @* asp-validation-for 显示该字段的验证错误信息 *@
                 <span asp-validation-for="Username" class="text-danger"></span>
             </div>
 
@@ -38,6 +51,7 @@
     </div>
 </div>
 
+@* 引入客户端验证脚本，实现输入时即时校验（不用等提交到服务器） *@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }

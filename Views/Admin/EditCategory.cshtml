@@ -1,3 +1,4 @@
+@* Admin/EditCategory.cshtml —— 编辑分类表单，对应 AdminController.EditCategory() *@
 @model WebProject1.Models.Category
 @{
     ViewData["Title"] = "编辑分类";
@@ -9,6 +10,7 @@
     <div class="card-body">
         <form asp-action="EditCategory" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+            @* 编辑时必须带�� Id，否则 EF Core 不知道要更新哪条记录 *@
             <input type="hidden" asp-for="Id" />
 
             <div class="mb-3">

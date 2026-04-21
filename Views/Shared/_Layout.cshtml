@@ -1,31 +1,45 @@
+@*
+    _Layout.cshtml —— 全站布局模板（母版页）
+    所有页面共享的 HTML 骨架：导航栏 + 主内容区 + 页脚 + 公共脚本
+    各个子页面的内容通过 @RenderBody() 插入到主内容区
+*@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    @* ViewData["Title"] 由每个子页面设置，如 ViewData["Title"] = "首页" *@
     <title>@ViewData["Title"] - 智慧图书馆</title>
+    @* 引入 Bootstrap CSS 框架（本地文件） *@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    @* Bootstrap Icons 图标库（CDN） *@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    @* 自定义样式表，asp-append-version="true" 会在 URL 后追加文件哈希值来防止浏览器缓存旧版本 *@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
 <body>
+    @* ========== 顶部导航栏 ========== *@
     <header>
         <nav class="navbar navbar-expand-lg">
             <div class="container">
+                @* asp-controller 和 asp-action 是 Tag Helper，会自动生成正确的 URL *@
                 <a class="navbar-brand" asp-controller="Home" asp-action="Index">
                     <i class="bi bi-book-half"></i> 智慧图书馆
                 </a>
+                @* 移动端时的汉堡菜单按钮 *@
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
+                    @* 左侧导航链接 *@
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item">
-                            <a class="nav-link" asp-controller="Home" asp-action="Index">首页</a>
+                            <a class="nav-link" asp-controller="Home" asp-action="Index">首��</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-controller="Book" asp-action="Index">图书检索</a>
+                            <a class="nav-link" asp-controller="Book" asp-action="Index">图书���索</a>
                         </li>
+                        @* 仅管理员可见的"管理后台"入口 *@
                         @if (Context.Session.GetString("UserRole") == "Admin")
                         {
                             <li class="nav-item">
@@ -33,9 +47,11 @@
                             </li>
                         }
                     </ul>
+                    @* 右侧：根据登录状态显示不同内容 *@
                     <ul class="navbar-nav">
                         @if (Context.Session.GetInt32("UserId") != null)
                         {
+                            @* 已登录：显示用户名下拉菜单 *@
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
                                     @Context.Session.GetString("Username")
@@ -60,6 +76,7 @@
                         }
                         else
                         {
+                            @* 未登录：显示登录/注册按钮 *@
                             <li class="nav-item">
                                 <a class="nav-link" asp-controller="Account" asp-action="Login">登录</a>
                             </li>
@@ -73,21 +90,27 @@
         </nav>
     </header>
 
+    @* ========== 主内容区 ========== *@
+    @* @RenderBody() 是布局模板的核心：子页面的全部内容会被插入到这个位置 *@
     <div class="container mt-4 mb-5">
         <main role="main">
             @RenderBody()
         </main>
     </div>
 
+    @* ========== 页脚 ========== *@
     <footer class="footer mt-auto py-3">
         <div class="container text-center">
-            <span>&copy; 2026 智慧图书馆管理系统</span>
+            <span>&copy; 2026 智慧图书馆管理系��</span>
         </div>
     </footer>
 
+    @* ========== 公共 JavaScript ========== *@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    @* RenderSectionAsync("Scripts") 让子页面可以通过 @section Scripts { } 注入额外的 JS *@
+    @* required: false 表示子页面可以不提供这个 section *@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

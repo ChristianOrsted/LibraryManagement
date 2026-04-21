@@ -1,3 +1,9 @@
+@*
+    Account/Register.cshtml —— 注册页面
+    对应 AccountController.Register()
+    表单字段与 RegisterViewModel 的属性一一对应
+    asp-for Tag Helper 会根据 ViewModel 上的验证特性自动生成前端验证规则
+*@
 @model WebProject1.Models.RegisterViewModel
 @{
     ViewData["Title"] = "注册";
@@ -9,13 +15,15 @@
         <p class="text-center text-muted mb-4">注册后即可借阅图书</p>
 
         <form asp-action="Register" method="post">
+            @* ModelOnly：只显示模型级别的错误，不重复显示字段级别的错误 *@
             <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
+            @* 每个表单字段的结构：label + input + validation span *@
             <div class="mb-3">
                 <label asp-for="Username" class="form-label"></label>
                 <input asp-for="Username" class="form-control" placeholder="3-50个字符" />
                 <span asp-validation-for="Username" class="text-danger"></span>
-            </div><!-- 其他字段同理 -->
+            </div>
 
             <div class="mb-3">
                 <label asp-for="Email" class="form-label"></label>
@@ -29,6 +37,7 @@
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
 
+            @* ConfirmPassword 字段：通过 ViewModel 上的 [Compare("Password")] 自动校验两次密码是否一致 *@
             <div class="mb-3">
                 <label asp-for="ConfirmPassword" class="form-label"></label>
                 <input asp-for="ConfirmPassword" class="form-control" placeholder="再次输入密码" />

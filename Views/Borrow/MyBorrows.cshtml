@@ -1,3 +1,8 @@
+@*
+    Borrow/MyBorrows.cshtml —— "我的借阅"页面
+    对应 BorrowController.MyBorrows()
+    展示当前用户的所有借阅记录（包括借阅中和已归还的），并提供归还操作
+*@
 @model List<WebProject1.Models.BorrowRecord>
 @{
     ViewData["Title"] = "我的借阅";
@@ -5,6 +10,7 @@
 
 <h3 class="mb-3">我的借阅记录</h3>
 
+@* 操作结果提示 *@
 @if (TempData["Success"] != null)
 {
     <div class="alert alert-success">@TempData["Success"]</div>
@@ -16,6 +22,7 @@
 
 @if (!Model.Any())
 {
+    @* 没有任何借阅记录时的空状态提示 *@
     <div class="text-center py-5 text-muted">
         <i class="bi bi-inbox" style="font-size: 3rem;"></i>
         <p class="mt-2">暂无借阅记录</p>
@@ -41,13 +48,17 @@ else
             <tbody>
                 @foreach (var record in Model)
                 {
+                    @* 判断是否逾期：状态为"借阅中"且已超过应还日期 *@
                     var isOverdue = record.Status == "Borrowing" && record.DueDate < DateTime.Now;
+                    @* 逾期的行显示红色背景（table-danger 是 Bootstrap 的表格样式类） *@
                     <tr class="@(isOverdue ? "table-danger" : "")">
+                        @* 通过导航属性链式访问：BorrowRecord -> BookCopy -> Book -> Title *@
                         <td>@record.BookCopy?.Book?.Title</td>
                         <td>@record.BookCopy?.Book?.Author</td>
                         <td>#@record.BookCopyId</td>
                         <td>@record.BorrowDate.ToString("yyyy-MM-dd")</td>
                         <td>@record.DueDate.ToString("yyyy-MM-dd")</td>
+                        @* ?. 是空值条件运算符，ReturnDate 为 null 时显示 "-" *@
                         <td>@(record.ReturnDate?.ToString("yyyy-MM-dd") ?? "-")</td>
                         <td>
                             @if (isOverdue)
@@ -64,6 +75,7 @@ else
                             }
                         </td>
                         <td>
+                            @* 只有借阅中的记录才显示"归还"按钮 *@
                             @if (record.Status == "Borrowing")
                             {
                                 <form asp-action="Return" method="post" class="d-inline">

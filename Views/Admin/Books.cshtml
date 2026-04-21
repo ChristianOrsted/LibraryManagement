@@ -1,3 +1,8 @@
+@*
+    Admin/Books.cshtml —— 管理员图书管理列表页
+    对应 AdminController.Books()
+    展示所有图书，支持编辑、查看副本、删除操作
+*@
 @model List<WebProject1.Models.Book>
 @{
     ViewData["Title"] = "图书管理";
@@ -46,6 +51,7 @@
                     <td>
                         <a asp-action="EditBook" asp-route-id="@book.Id" class="btn btn-sm btn-outline-primary">编辑</a>
                         <a asp-action="BookCopies" asp-route-bookId="@book.Id" class="btn btn-sm btn-outline-info">副本</a>
+                        @* onsubmit 弹出确认对话框，防止误删 *@
                         <form asp-action="DeleteBook" method="post" class="d-inline"
                               onsubmit="return confirm('确定要删除这本书吗？')">
                             <input type="hidden" name="id" value="@book.Id" />

@@ -1,4 +1,9 @@
-﻿@model ErrorViewModel
+﻿@*
+    Error.cshtml —— 全局错误页面
+    当应用在生产环境中发生未处理异常时，会显示此页面
+    对应 Program.cs 中的 app.UseExceptionHandler("/Home/Error") 配置
+*@
+@model ErrorViewModel
 @{
     ViewData["Title"] = "Error";
 }
@@ -6,6 +11,7 @@
 <h1 class="text-danger">Error.</h1>
 <h2 class="text-danger">An error occurred while processing your request.</h2>
 
+@* 如果存在请求 ID，就显示出来，方便在服务器日志中排查对应的请求 *@
 @if (Model.ShowRequestId)
 {
     <p>

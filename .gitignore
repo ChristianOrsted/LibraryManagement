@@ -62,3 +62,6 @@ sql.md
 *.docx
 generate_report.py
 introduction/
+
+## Zip Files
+*.zip
